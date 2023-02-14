@@ -60,19 +60,20 @@ const Home = () => {
     value: PERIODS[period],
   }));
 
-  const rows = transactions?.data
-    ?.filter(({ customerId, date }) => {
-      return customerId === user && checkIfDateWithinPeriod(date, period);
-    })
-    .map(({ date, amount, id }, index) => {
-      return [
-        id,
-        index + 1,
-        date.toDateString(),
-        amount,
-        calculatePoints(amount),
-      ];
-    });
+  const rows =
+    transactions?.data
+      ?.filter(({ customerId, date }) => {
+        return customerId === user && checkIfDateWithinPeriod(date, period);
+      })
+      .map(({ date, amount, id }, index) => {
+        return [
+          id,
+          index + 1,
+          date.toDateString(),
+          amount,
+          calculatePoints(amount),
+        ];
+      }) || [];
 
   const footerCells = [
     '',
@@ -88,7 +89,7 @@ const Home = () => {
     >
       <Header />
       <div className="flex justify-end py-3">
-        {isCustomersFetching === null || isCustomersFetching ? (
+        {(isCustomersFetching === null || isCustomersFetching) && !user ? (
           <LineSkeleton />
         ) : (
           <>
@@ -107,7 +108,6 @@ const Home = () => {
       </div>
       {(isTransactionsFetching === null || isTransactionsFetching) &&
       (isCustomersFetching === null || isCustomersFetching) &&
-      !rows &&
       !user ? (
         <ListSkeleton />
       ) : (
