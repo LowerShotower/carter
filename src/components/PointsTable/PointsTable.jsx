@@ -29,7 +29,7 @@ const PointsTable = ({ columns, rows, footerCells }) => {
             <tr>
               {footerCells?.map((cell, index) => {
                 return (
-                  <th className="prose-md prose text-gray-dark " key={index}>
+                  <th className="prose text-gray-dark" key={index}>
                     {cell}
                   </th>
                 );
@@ -47,4 +47,5 @@ export default PointsTable;
 PointsTable.defaultProps = {
   columns: [],
   rows: [],
+  footerCells: [],
 };

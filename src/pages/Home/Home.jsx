@@ -20,7 +20,7 @@ export const PERIODS = Object.freeze({
 });
 
 const Home = () => {
-  const [user, setUser] = useState(DEFAULT_USER_INDEX);
+  const [user, setUser] = useState(null);
   const [period, setPeriod] = useState(PERIODS.ALL);
 
   const [customers, triggerCustomersFetch, isCustomersFetching] = useFetch(
@@ -30,8 +30,12 @@ const Home = () => {
     useFetch(urls.getTransactionsUrl);
 
   useEffect(() => {
-    triggerCustomersFetch();
-    triggerTransactionsFetch();
+    const cancelCustomersFetch = triggerCustomersFetch();
+    const cancelTransactionsFetch = triggerTransactionsFetch();
+    return () => {
+      cancelCustomersFetch();
+      cancelTransactionsFetch();
+    };
   }, []);
 
   useEffect(() => {
@@ -51,7 +55,7 @@ const Home = () => {
     value: customer.id,
   }));
 
-  const periodsOptions = Object.keys(PERIODS)?.map((period) => ({
+  const periodsOptions = Object.keys(PERIODS).map((period) => ({
     name: PERIODS[period],
     value: PERIODS[period],
   }));
@@ -69,6 +73,7 @@ const Home = () => {
         calculatePoints(amount),
       ];
     });
+
   const footerCells = [
     '',
     '',
@@ -83,7 +88,7 @@ const Home = () => {
     >
       <Header />
       <div className="flex justify-end py-3">
-        {isCustomersFetching ? (
+        {isCustomersFetching === null || isCustomersFetching ? (
           <LineSkeleton />
         ) : (
           <>
@@ -100,7 +105,10 @@ const Home = () => {
           </>
         )}
       </div>
-      {isTransactionsFetching && isCustomersFetching ? (
+      {(isTransactionsFetching === null || isTransactionsFetching) &&
+      (isCustomersFetching === null || isCustomersFetching) &&
+      !rows &&
+      !user ? (
         <ListSkeleton />
       ) : (
         <PointsTable

@@ -1,26 +1,32 @@
 import { mockedFetch } from '../../services/api';
-import { useEffect, useState } from 'react';
+import { useRef, useState } from 'react';
 
 const useFetch = (url) => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [isFetching, setIsFetching] = useState(null);
+  const cancelFetch = useRef(false);
 
-  const triggerFetch = async () => {
+  const fetch = async () => {
     try {
       setIsFetching(true);
-      const res = await mockedFetch(url, 1000);
+      const res = await mockedFetch(url, (Math.random() + 1) * 1000);
+      if (cancelFetch.current) return;
       setData(res);
       setIsFetching(false);
     } catch (error) {
+      if (cancelFetch.current) return;
       setError(error);
       setIsFetching(false);
     }
   };
-
-  useEffect(() => {
-    triggerFetch();
-  }, []);
+  const triggerFetch = () => {
+    cancelFetch.current = false;
+    fetch();
+    return () => {
+      cancelFetch.current = true;
+    };
+  };
 
   return [data, triggerFetch, isFetching, error];
 };
