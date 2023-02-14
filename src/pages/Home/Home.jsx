@@ -81,7 +81,7 @@ const Home = () => {
     'Total: ',
     rows?.reduce((sum, row) => (sum += row[POINTS_INDEX_IN_ROW]), 0),
   ];
-
+  console.log(isTransactionsFetching, isCustomersFetching);
   return (
     <div
       data-testid="home-page"
@@ -106,8 +106,10 @@ const Home = () => {
           </>
         )}
       </div>
-      {(isTransactionsFetching === null || isTransactionsFetching) &&
-      (isCustomersFetching === null || isCustomersFetching) &&
+      {isTransactionsFetching === null ||
+      isTransactionsFetching ||
+      isCustomersFetching === null ||
+      isCustomersFetching ||
       !user ? (
         <ListSkeleton />
       ) : (

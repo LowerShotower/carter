@@ -10,7 +10,7 @@ const useFetch = (url) => {
   const fetch = async () => {
     try {
       setIsFetching(true);
-      const res = await mockedFetch(url, Math.random() * 200 + 500);
+      const res = await mockedFetch(url, Math.random() * 5000 + 1000);
       if (cancelFetch.current) return;
       setData(res);
       setIsFetching(false);
