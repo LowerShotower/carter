@@ -81,7 +81,7 @@ const Home = () => {
     'Total: ',
     rows?.reduce((sum, row) => (sum += row[POINTS_INDEX_IN_ROW]), 0),
   ];
-  console.log(isTransactionsFetching, isCustomersFetching);
+
   return (
     <div
       data-testid="home-page"
